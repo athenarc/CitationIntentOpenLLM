@@ -1,0 +1,10 @@
+{
+    "QWEN2.5_14B_AA_FT": {
+        "path": "Qwen-Finetunes/Qwen-2.5-14B-aclarc-FT/Qwen2.5-14B-Instruct-aclarc-FP16.gguf",
+        "context_length": "8192"
+    },
+    "QWEN2.5_14B_SC_FT": {
+        "path": "Qwen-Finetunes/Qwen-2.5-14B-scicite-FT/Qwen2.5-14B-Instruct-scicite-FP16.gguf",
+        "context_length": "8192"
+    }
+}

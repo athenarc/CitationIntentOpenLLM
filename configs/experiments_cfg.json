@@ -1,0 +1,22 @@
+{
+    "methods": ["zero-shot", "one-shot", "few-shot", "many-shot"],
+    "number_of_examples": {
+        "zero-shot": 0,
+        "one-shot": 1,
+        "few-shot": 5,
+        "many-shot": 10
+    },
+    "examples_seed": 42,
+    "datasets": ["scicite", "acl-arc"],
+    "system_prompts": [1, 2, 3],
+    "class_labels": {
+        "scicite": ["background information", "method", "results comparison"],
+        "acl-arc": ["BACKGROUND", "MOTIVATION", "USES", "EXTENDS", "COMPARES_CONTRASTS", "FUTURE"]
+    },
+    "examples_methods": ["1-inline", "2-roles"],
+    "query_templates": ["1-simple", "2-qa-multiple-choice"],
+    "temperature": [0.0, 0.2, 0.5, 1.0],
+    "bit_precision": "Q8",
+    "finetuned": false,
+    "run_id": "1 - Instruct Q8"
+}

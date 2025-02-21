@@ -1,0 +1,2 @@
+Model,Precision,Recall,F1-Score,Accuracy
+QWEN2.5_14B_F16,0.5966,0.4727,0.4993,0.6763

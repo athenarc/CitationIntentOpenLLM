@@ -1,0 +1,6 @@
+{
+    "QWEN2.5_14B": {
+        "path": "bartowski/Qwen2.5-14B-Instruct-GGUF/Qwen2.5-14B-Instruct-f16.gguf",
+        "context_length": "8192"
+    }
+}
