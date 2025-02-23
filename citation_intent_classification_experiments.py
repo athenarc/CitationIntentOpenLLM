@@ -170,7 +170,7 @@ if __name__ == "__main__":
     subprocess.run(["lms", "server", "start"])
     subprocess.run(["lms", "unload", "--all"])
 
-    experiment_cfg_path = os.path.join('configs', 'experiments_cfg.json')
+    experiment_cfg_path = os.path.join('experimental-configs', 'experiments_cfg.json')
     experiment_cfg = json.loads(Path(experiment_cfg_path).read_text())
 
     methods = experiment_cfg['methods']
@@ -188,12 +188,12 @@ if __name__ == "__main__":
     system_prompt = []
 
     if finetuned:
-        models_cfg_path = os.path.join('configs', f"models.{bit_precision}.ft.json")
+        models_cfg_path = os.path.join('experimental-configs', f"models.{bit_precision}.ft.json")
     else:
-        models_cfg_path = os.path.join('configs', f'models.{bit_precision}.json')
+        models_cfg_path = os.path.join('experimental-configs', f'models.{bit_precision}.json')
     models_cfg = json.loads(Path(models_cfg_path).read_text())
     
-    system_prompts_cfg_path = os.path.join('configs', 'system_prompts.json')
+    system_prompts_cfg_path = os.path.join('experimental-configs', 'system_prompts.json')
     system_prompts_cfg = json.loads(Path(system_prompts_cfg_path).read_text())
 
     datasets_path = os.path.join('datasets', 'formatted')
