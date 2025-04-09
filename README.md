@@ -32,7 +32,7 @@ Supplementary material for paper "Can LLMs Predict Citation Intent? An Experimen
 | ---- | ------------------- | -------- |
 |    1 | Qwen 2.5 - 14B      |    61.04 |
 |    2 | Gemma 2 - 9B        |    57.19 |
-|    3 | Gemma 2 - 27B       |    57.00 |
+|    3 | Gemma 2 - 27B       |    57.00 |
 |    4 | Mistral Nemo - 12B  |    48.11 |
 |    5 | Qwen 2 - 7B         |    47.50 |
 |    6 | LLaMA 3.1 - 8B      |    46.43 |
