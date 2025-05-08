@@ -14,9 +14,9 @@ Supplementary material for paper "Can LLMs Predict Citation Intent? An Experimen
 | Rank | Model               | F1-Score |
 | ---- | ------------------- | -------- |
 |    1 | Qwen 2.5 - 14B      |    78.33 |
-|    2 | Mistral Nemo - 12B  |    77.38 |
-|    3 | Gemma 2 - 27B       |    76.16 |
-|    4 | Gemma 2 - 9B        |    74.97 |
+|    2 | Gemma 2 - 27B       |    77.86 |
+|    3 | Mistral Nemo - 12B  |    77.39 |
+|    4 | Gemma 2 - 9B        |    75.12 |
 |    5 | Phi 3 Medium - 14B  |    74.67 |
 |    6 | LLaMA 3 - 8B        |    74.39 |
 |    7 | Qwen 2 - 7B         |    72.89 |
@@ -30,17 +30,17 @@ Supplementary material for paper "Can LLMs Predict Citation Intent? An Experimen
 
 | Rank | Model               | F1-Score |
 | ---- | ------------------- | -------- |
-|    1 | Qwen 2.5 - 14B      |    61.04 |
-|    2 | Gemma 2 - 9B        |    57.19 |
-|    3 | Gemma 2 - 27B       |    57.00 |
-|    4 | Mistral Nemo - 12B  |    48.11 |
-|    5 | Qwen 2 - 7B         |    47.50 |
-|    6 | LLaMA 3.1 - 8B      |    46.43 |
-|    7 | Phi 3.5 Mini - 3.8B |    41.82 |
-|    8 | Phi 3 Medium - 14B  |    39.30 |
-|    9 | LLaMA 3.2 - 3B      |    37.82 |
-|   10 | LLaMA 3 - 8B        |    37.29 |
-|   11 | Gemma 2 - 2B        |    36.80 |
+|    1 | Qwen 2.5 - 14B      |    63.68 |
+|    2 | Gemma 2 - 27B       |    58.95 |
+|    3 | Gemma 2 - 9B        |    57.19 |
+|    4 | Qwen 2 - 7B         |    51.26 |
+|    5 | LLaMA 3.1 - 8B      |    48.45 |
+|    6 | Mistral Nemo - 12B  |    48.11 |
+|    7 | Phi 3.5 Mini - 3.8B |    43.74 |
+|    8 | Phi 3 Medium - 14B  |    43.46 |
+|    9 | Gemma 2 - 2B        |    40.96 |
+|   10 | LLaMA 3.2 - 3B      |    40.07 |
+|   11 | LLaMA 3 - 8B        |    38.06 |
 |   12 | LLaMA 3.2 - 1B      |    24.60 |
 
 </td></tr> </table>
