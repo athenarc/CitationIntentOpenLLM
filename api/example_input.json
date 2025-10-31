@@ -1,0 +1,5 @@
+{
+    "text": "In this paper we have described the CLST (Corpus-based Loanword Segmentation and Translation) system which has been developed to segment Japanese loanword MWEs and construct likely English translations.The system, which leverages the availability of large bilingual dictionaries of loanwords and English n-gram corpora, is achieving high levels of accuracy in discriminating between single loanwords and MWEs, and in segmenting MWEs.It is also generating useful translations of MWEs, and has the potential to being a major aide both to lexicography in this area, and to translating.The apparent success of an approach based on a combination of large corpora and relatively simple heuristics is consistent with the conclusions reached in a number of earlier investigations (Banko and Brill, 2001; Lapata and Keller, 2004) .",
+    "cite_start": 772,
+    "cite_end": 795
+}

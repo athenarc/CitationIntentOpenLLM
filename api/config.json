@@ -1,0 +1,12 @@
+{
+    "inference_api": {
+        "base_url": "http://localhost:8080/v1",
+        "api_key": "your-api-key-here",
+        "model_name": "Qwen/Qwen2.5-14B-Instruct"
+    },
+    "dataset": "scicite",
+    "system_prompt_id": 3,
+    "query_template": "1-simple",
+    "temperature": 0.0,
+    "max_tokens": 15
+}
