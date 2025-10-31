@@ -53,6 +53,7 @@ class CitationResponse(BaseModel):
     valid: bool = Field(..., description="Whether prediction is valid")
     model: str = Field(..., description="Model name used")
     dataset: str = Field(..., description="Dataset configuration")
+    prompt_info: dict = Field(..., description="Information about the prompt used")
 
 
 class ConfigResponse(BaseModel):
@@ -170,6 +171,54 @@ async def get_config():
             "query_template": classifier.config['query_template'],
             "temperature": classifier.config['temperature'],
             "class_labels": classifier.class_labels
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/inspect-prompt", tags=["Configuration"])
+async def inspect_prompt():
+    """
+    Inspect the actual system prompt being used, including any few-shot examples.
+    
+    This endpoint is useful for verifying that examples are loaded correctly
+    when using one-shot, few-shot, or many-shot prompting methods.
+    
+    Returns:
+        - system_prompt: The full system prompt messages array
+        - num_messages: Total number of messages in the prompt
+        - has_examples: Whether examples are included
+        - prompting_method: Current prompting method
+        - example_count_per_class: Expected number of examples per class
+    """
+    try:
+        ensure_classifier_initialized()
+        
+        prompting_method = classifier.config.get('prompting_method', 'zero-shot')
+        examples_method = classifier.config.get('examples_method', '1-inline')
+        num_examples = {
+            "zero-shot": 0,
+            "one-shot": 1,
+            "few-shot": 5,
+            "many-shot": 10
+        }.get(prompting_method, 0)
+        
+        # Calculate expected number of examples
+        total_expected_examples = num_examples * len(classifier.class_labels)
+        
+        return {
+            "system_prompt": classifier.system_prompt,
+            "num_messages": len(classifier.system_prompt),
+            "has_examples": num_examples > 0,
+            "prompting_method": prompting_method,
+            "examples_method": examples_method,
+            "example_count_per_class": num_examples,
+            "total_classes": len(classifier.class_labels),
+            "total_expected_examples": total_expected_examples,
+            "explanation": {
+                "inline": "For inline method (1-inline), examples are appended to system message content with '# EXAMPLES #' header",
+                "roles": "For roles method (2-roles), examples appear as alternating user/assistant message pairs"
+            }
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

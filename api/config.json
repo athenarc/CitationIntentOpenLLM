@@ -7,7 +7,7 @@
     "dataset": "scicite",
     "system_prompt_id": 3,
     "prompting_method": "one-shot",
-    "examples_method": "1-inline",
+    "examples_method": "2-roles",
     "examples_seed": 42,
     "query_template": "2-qa-multiple-choice",
     "temperature": 0.2,

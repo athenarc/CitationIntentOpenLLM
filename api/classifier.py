@@ -288,11 +288,23 @@ class CitationIntentClassifier:
         # Clean prediction
         cleaned_prediction = clean_prediction(raw_prediction, self.class_labels)
         
+        # Gather prompt info for verification from config
+        prompting_method = self.config['prompting_method']
+        examples_method = self.config['examples_method']
+        num_examples = get_num_examples(prompting_method)
+        
         return {
             "citation_context": citation_context,
             "raw_prediction": raw_prediction,
             "predicted_class": cleaned_prediction,
             "valid": cleaned_prediction is not None,
             "model": self.model_name,
-            "dataset": self.config['dataset']
+            "dataset": self.config['dataset'],
+            "prompt_info": {
+                "prompting_method": prompting_method,
+                "examples_method": examples_method,
+                "num_messages_in_prompt": len(self.system_prompt),
+                "examples_per_class": num_examples,
+                "total_expected_examples": num_examples * len(self.class_labels)
+            }
         }
