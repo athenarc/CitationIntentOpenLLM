@@ -39,8 +39,8 @@ class CitationRequest(BaseModel):
         json_schema_extra = {
             "example": {
                 "text": "The apparent success of an approach based on a combination of large corpora and relatively simple heuristics is consistent with the conclusions reached in a number of earlier investigations (Banko and Brill, 2001; Lapata and Keller, 2004).",
-                "cite_start": 178,
-                "cite_end": 223
+                "cite_start": 214,
+                "cite_end": 238
             }
         }
 

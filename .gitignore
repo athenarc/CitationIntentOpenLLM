@@ -2,3 +2,16 @@
 # results/scicite/.DS_Store
 # system_prompts/.DS_Store
 .github/
+vllm
+tgi-script.sh
+.venv
+.env
+__pycache__/
+
+# ignore all except api folder
+*
+!api/
+!api/**
+api/__pycache__/
+api/.env
+api/logs

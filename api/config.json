@@ -1,15 +1,15 @@
 {
     "inference_api": {
         "base_url": "http://localhost:8080/v1",
-        "api_key": "your-api-key-here",
-        "model_name": "Qwen/Qwen2.5-14B-Instruct"
+        "api_key": "vllm",
+        "model_name": "sknow-lab/Qwen2.5-14B-CIC-SciCite"
     },
     "dataset": "scicite",
     "system_prompt_id": 3,
-    "prompting_method": "zero-shot",
+    "prompting_method": "one-shot",
     "examples_method": "1-inline",
     "examples_seed": 42,
-    "query_template": "1-simple",
-    "temperature": 0.0,
+    "query_template": "2-qa-multiple-choice",
+    "temperature": 0.2,
     "max_tokens": 15
 }
