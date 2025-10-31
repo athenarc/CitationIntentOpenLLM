@@ -53,10 +53,21 @@ Edit `config.json` to point to your inference server:
     },
     "dataset": "scicite",
     "system_prompt_id": 3,
+    "prompting_method": "zero-shot",
+    "examples_method": "1-inline",
+    "examples_seed": 42,
     "query_template": "1-simple",
-    "temperature": 0.0
+    "temperature": 0.0,
+    "max_tokens": 15
 }
 ```
+
+**Key parameters:**
+- `prompting_method`: Use `"zero-shot"`, `"one-shot"`, `"few-shot"`, or `"many-shot"`
+- `examples_method`: Use `"1-inline"` (append to prompt) or `"2-roles"` (conversation pairs)
+- `query_template`: Use `"1-simple"` (direct) or `"2-qa-multiple-choice"` (QA format)
+
+See `config.examples.json` for more configuration examples.
 
 ### 4. Start the API
 

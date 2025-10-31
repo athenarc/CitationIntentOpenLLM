@@ -8,9 +8,11 @@ It reuses helper functions from the experimental pipeline but operates as a stan
 import sys
 import os
 import json
+import random
+import string
 from pathlib import Path
 from openai import OpenAI
-import string
+import pandas as pd
 
 # Add parent directory to path to import from experimental code
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -38,6 +40,77 @@ def get_class_labels(dataset):
         "acl-arc": ["BACKGROUND", "MOTIVATION", "USES", "EXTENDS", "COMPARES_CONTRASTS", "FUTURE"]
     }
     return class_labels.get(dataset, [])
+
+
+def get_num_examples(prompting_method):
+    """Get number of examples based on prompting method."""
+    examples_map = {
+        "zero-shot": 0,
+        "one-shot": 1,
+        "few-shot": 5,
+        "many-shot": 10
+    }
+    return examples_map.get(prompting_method, 0)
+
+
+def load_training_data(dataset):
+    """Load training data for examples."""
+    train_path = Path(__file__).parent.parent / 'datasets' / 'formatted' / dataset / 'train.csv'
+    if not train_path.exists():
+        raise FileNotFoundError(f"Training data not found: {train_path}")
+    return pd.read_csv(train_path)
+
+
+def add_examples(num_examples, query_template, examples_method, examples_seed, df_train, system_prompt, class_labels):
+    """
+    Add few-shot examples to the system prompt.
+    
+    Args:
+        num_examples: Number of examples per class
+        query_template: Query template type
+        examples_method: How to inject examples ('1-inline' or '2-roles')
+        examples_seed: Random seed for example selection
+        df_train: Training dataframe
+        system_prompt: System prompt messages
+        class_labels: List of class labels
+    
+    Returns:
+        Updated system prompt with examples
+    """
+    if num_examples == 0:
+        return system_prompt
+    
+    all_example_pairs = []
+    random.seed(examples_seed)
+    
+    template_qa = "{sentence}\n### Question: Which is the most likely intent for this citation?\n{options}\n### Answer: "
+    template_simple = "{sentence} \nClass: "
+    multiple_choice = form_multiple_choice_prompt(class_labels) if query_template[0] == '2' else None
+    prompt = template_qa if query_template[0] == '2' else template_simple
+
+    if examples_method[0] == '1':  # Inline method
+        all_example_pairs = [
+            f"\n{prompt.format(sentence=ex, options=multiple_choice if multiple_choice else '')} {label}\n" 
+            for label in class_labels
+            for ex in df_train[df_train['citation_class_label'] == label].sample(num_examples, random_state=examples_seed)['citation_context']
+        ]
+        random.shuffle(all_example_pairs)
+        all_example_pairs = ''.join(all_example_pairs)
+        system_prompt[0]['content'] += "\n\n########\n\n# EXAMPLES #\n" + all_example_pairs
+
+    elif examples_method[0] == '2':  # Roles method (alternating user/assistant)
+        all_example_pairs = [
+            [
+                {"role": "user", "content": f"{prompt.format(sentence=ex, options=multiple_choice if multiple_choice else '')}"},
+                {"role": "assistant", "content": label}
+            ]
+            for label in class_labels
+            for ex in df_train[df_train['citation_class_label'] == label].sample(num_examples, random_state=examples_seed)['citation_context']
+        ]
+        random.shuffle(all_example_pairs)
+        system_prompt.extend([pair for sublist in all_example_pairs for pair in sublist])
+
+    return system_prompt
 
 
 def form_multiple_choice_prompt(class_labels):
@@ -165,6 +238,25 @@ class CitationIntentClassifier:
         
         if self.config['query_template'][0] == '2':
             self.multiple_choice = form_multiple_choice_prompt(self.class_labels)
+        
+        # Add few-shot examples if prompting method requires it
+        prompting_method = self.config.get('prompting_method', 'zero-shot')
+        num_examples = get_num_examples(prompting_method)
+        
+        if num_examples > 0:
+            examples_method = self.config.get('examples_method', '1-inline')
+            examples_seed = self.config.get('examples_seed', 42)
+            df_train = load_training_data(dataset)
+            
+            self.system_prompt = add_examples(
+                num_examples=num_examples,
+                query_template=self.config['query_template'],
+                examples_method=examples_method,
+                examples_seed=examples_seed,
+                df_train=df_train,
+                system_prompt=self.system_prompt.copy(),  # Copy to avoid modifying original
+                class_labels=self.class_labels
+            )
     
     def classify(self, text, cite_start, cite_end):
         """

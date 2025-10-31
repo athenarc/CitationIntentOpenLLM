@@ -78,19 +78,35 @@ Edit `config.json` to point to your inference server:
     },
     "dataset": "scicite",
     "system_prompt_id": 3,
+    "prompting_method": "zero-shot",
+    "examples_method": "1-inline",
+    "examples_seed": 42,
     "query_template": "1-simple",
-    "temperature": 0.0
+    "temperature": 0.0,
+    "max_tokens": 15
 }
 ```
 
 **Configuration parameters:**
+
+*Inference Settings:*
 - `inference_api.base_url`: URL of your inference server's API endpoint (must be OpenAI-compatible)
 - `inference_api.api_key`: API key if required (use empty string if not needed)
 - `inference_api.model_name`: Model identifier to use for inference
+
+*Task Configuration:*
 - `dataset`: Either `"scicite"` or `"acl-arc"`
 - `system_prompt_id`: System prompt variant (1, 2, or 3)
-- `query_template`: `"1-simple"` or `"2-qa-multiple-choice"`
+
+*Prompting Strategy:*
+- `prompting_method`: `"zero-shot"` (0 examples), `"one-shot"` (1 example), `"few-shot"` (5 examples), or `"many-shot"` (10 examples)
+- `examples_method`: `"1-inline"` (append to system prompt) or `"2-roles"` (user/assistant pairs). Only used if prompting_method is not zero-shot
+- `examples_seed`: Random seed for example selection (default: 42)
+
+*Output Format:*
+- `query_template`: `"1-simple"` (direct class prediction) or `"2-qa-multiple-choice"` (letter-based QA)
 - `temperature`: Sampling temperature (0.0 to 1.0)
+- `max_tokens`: Maximum tokens in model response (default: 15)
 
 ## Usage
 

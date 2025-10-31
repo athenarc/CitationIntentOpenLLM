@@ -60,6 +60,8 @@ class ConfigResponse(BaseModel):
     model: str
     dataset: str
     system_prompt_id: int
+    prompting_method: str
+    examples_method: str
     query_template: str
     temperature: float
     class_labels: list
@@ -163,6 +165,8 @@ async def get_config():
             "model": classifier.model_name,
             "dataset": classifier.config['dataset'],
             "system_prompt_id": classifier.config['system_prompt_id'],
+            "prompting_method": classifier.config.get('prompting_method', 'zero-shot'),
+            "examples_method": classifier.config.get('examples_method', '1-inline'),
             "query_template": classifier.config['query_template'],
             "temperature": classifier.config['temperature'],
             "class_labels": classifier.class_labels

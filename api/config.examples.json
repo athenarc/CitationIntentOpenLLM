@@ -1,0 +1,67 @@
+{
+    "comment": "Example configurations for different prompting strategies",
+    
+    "zero_shot_simple": {
+        "inference_api": {
+            "base_url": "http://localhost:8080/v1",
+            "api_key": "",
+            "model_name": "Qwen/Qwen2.5-14B-Instruct"
+        },
+        "dataset": "scicite",
+        "system_prompt_id": 3,
+        "prompting_method": "zero-shot",
+        "examples_method": "1-inline",
+        "examples_seed": 42,
+        "query_template": "1-simple",
+        "temperature": 0.0,
+        "max_tokens": 15
+    },
+    
+    "few_shot_inline_qa": {
+        "inference_api": {
+            "base_url": "http://localhost:8080/v1",
+            "api_key": "",
+            "model_name": "Qwen/Qwen2.5-14B-Instruct"
+        },
+        "dataset": "scicite",
+        "system_prompt_id": 3,
+        "prompting_method": "few-shot",
+        "examples_method": "1-inline",
+        "examples_seed": 42,
+        "query_template": "2-qa-multiple-choice",
+        "temperature": 0.0,
+        "max_tokens": 15
+    },
+    
+    "few_shot_roles": {
+        "inference_api": {
+            "base_url": "http://localhost:8080/v1",
+            "api_key": "",
+            "model_name": "Qwen/Qwen2.5-14B-Instruct"
+        },
+        "dataset": "scicite",
+        "system_prompt_id": 3,
+        "prompting_method": "few-shot",
+        "examples_method": "2-roles",
+        "examples_seed": 42,
+        "query_template": "1-simple",
+        "temperature": 0.0,
+        "max_tokens": 15
+    },
+    
+    "many_shot_aclarc": {
+        "inference_api": {
+            "base_url": "http://localhost:8080/v1",
+            "api_key": "",
+            "model_name": "Qwen/Qwen2.5-14B-Instruct"
+        },
+        "dataset": "acl-arc",
+        "system_prompt_id": 2,
+        "prompting_method": "many-shot",
+        "examples_method": "2-roles",
+        "examples_seed": 42,
+        "query_template": "1-simple",
+        "temperature": 0.2,
+        "max_tokens": 15
+    }
+}
