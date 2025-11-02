@@ -72,8 +72,8 @@ def ensure_classifier_initialized():
     """Ensure the classifier is initialized and ready."""
     global classifier
     if classifier is None:
-        config_path = Path(__file__).parent / "config.json"
-        classifier = CitationIntentClassifier(config_path)
+        # Config will be loaded from api/config/config.json by default
+        classifier = CitationIntentClassifier()
         print(f"Initialized classifier with model: {classifier.model_name}")
         print(f"Connected to inference API: {classifier.config['inference_api']['base_url']}")
 

@@ -5,6 +5,11 @@
 
 set -e
 
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Navigate to the API root directory (parent of scripts/)
+cd "$SCRIPT_DIR/.."
+
 LOG_DIR="./logs"
 PID_FILE="$LOG_DIR/gunicorn.pid"
 

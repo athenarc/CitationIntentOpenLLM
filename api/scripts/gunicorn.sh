@@ -5,6 +5,11 @@
 
 set -e
 
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Navigate to the API root directory (parent of scripts/)
+cd "$SCRIPT_DIR/.."
+
 # Load environment variables from .env file
 if [ -f .env ]; then
     echo "Loading configuration from .env file..."
@@ -19,7 +24,7 @@ WORKER_CLASS="uvicorn.workers.UvicornWorker"
 HOST=${API_HOST:-0.0.0.0}
 PORT=${API_PORT:-8000}
 BIND_ADDRESS="$HOST:$PORT"
-APP_MODULE="main:app"
+APP_MODULE="src.main:app"
 
 # Log files
 LOG_DIR="./logs"

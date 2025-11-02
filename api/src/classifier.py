@@ -5,8 +5,6 @@ This module provides a lightweight API for classifying citation intents using LL
 It reuses helper functions from the experimental pipeline but operates as a standalone service.
 """
 
-import sys
-import os
 import json
 import random
 import string
@@ -14,21 +12,25 @@ from pathlib import Path
 from openai import OpenAI
 import pandas as pd
 
-# Add parent directory to path to import from experimental code
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-
-def load_config(config_path="config.json"):
+def load_config(config_path=None):
     """Load API configuration from JSON file."""
-    config_file = Path(config_path)
-    if not config_file.exists():
+    if config_path is None:
+        # Default to config/config.json relative to project root
+        config_path = Path(__file__).parent.parent / 'config' / 'config.json'
+    else:
+        config_path = Path(config_path)
+    
+    if not config_path.exists():
         raise FileNotFoundError(f"Configuration file not found: {config_path}")
-    return json.loads(config_file.read_text())
+    return json.loads(config_path.read_text())
 
 
 def load_system_prompts(dataset):
-    """Load system prompts from experimental configs."""
-    system_prompts_path = Path(__file__).parent.parent / 'experimental-configs' / 'system_prompts.json'
+    """Load system prompts from config directory."""
+    system_prompts_path = Path(__file__).parent.parent / 'config' / 'system_prompts.json'
+    if not system_prompts_path.exists():
+        raise FileNotFoundError(f"System prompts file not found: {system_prompts_path}")
     system_prompts = json.loads(system_prompts_path.read_text())
     return system_prompts
 
@@ -54,8 +56,8 @@ def get_num_examples(prompting_method):
 
 
 def load_training_data(dataset):
-    """Load training data for examples."""
-    train_path = Path(__file__).parent.parent / 'datasets' / 'formatted' / dataset / 'train.csv'
+    """Load training data for examples from data directory."""
+    train_path = Path(__file__).parent.parent / 'data' / dataset / 'train.csv'
     if not train_path.exists():
         raise FileNotFoundError(f"Training data not found: {train_path}")
     return pd.read_csv(train_path)
@@ -240,12 +242,12 @@ class CitationIntentClassifier:
             self.multiple_choice = form_multiple_choice_prompt(self.class_labels)
         
         # Add few-shot examples if prompting method requires it
-        prompting_method = self.config.get('prompting_method', 'zero-shot')
+        prompting_method = self.config['prompting_method']
         num_examples = get_num_examples(prompting_method)
         
         if num_examples > 0:
-            examples_method = self.config.get('examples_method', '1-inline')
-            examples_seed = self.config.get('examples_seed', 42)
+            examples_method = self.config['examples_method']
+            examples_seed = self.config['examples_seed']
             df_train = load_training_data(dataset)
             
             self.system_prompt = add_examples(
