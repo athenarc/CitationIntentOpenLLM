@@ -10,7 +10,7 @@ from typing import Optional
 from pathlib import Path
 import os
 import logging
-from classifier import CitationIntentClassifier
+from src.classifier import CitationIntentClassifier
 
 # Configure logging
 logging.basicConfig(

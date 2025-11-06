@@ -12,6 +12,6 @@ __pycache__/
 *
 !api/
 !api/**
-api/__pycache__/
 api/.env
 api/logs
+api/**/__pycache__/
