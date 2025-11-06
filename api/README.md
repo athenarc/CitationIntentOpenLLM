@@ -210,20 +210,47 @@ python tests/test_api.py
 
 ## Troubleshooting
 
-**Port conflicts:**
+### Startup Failures
 
+The `gunicorn.sh` script includes automatic diagnostics:
+
+**Port already in use:**
+```bash
+# Script will show which process is using the port
+# Kill it with:
+kill $(lsof -t -i:8000)
 ```
-uvicorn src.main:app --port 8001
 
+**Import errors:**
+```bash
+# Check logs/import_error.log for details
+cat logs/import_error.log
+
+# Test imports manually:
+python -c "from src.main import app"
+```
+
+**Process dies immediately:**
+```bash
+# Check error logs:
+tail -20 logs/error.log
+
+# Run in foreground for debugging:
+gunicorn src.main:app --bind 0.0.0.0:8000 --log-level debug
+```
+
+### Runtime Issues
+
+**Port conflicts:**
+```bash
+uvicorn src.main:app --port 8001
 ```
 
 **Connection issues:**
-
 - Check server: `curl http://localhost:8080/v1/models`
 - Verify `base_url` ends with `/v1`
 
 **Invalid predictions:**
-
 - Use `temperature: 0.0`
 - Try `system_prompt_id: 3`
 - Use `query_template: "2-qa-multiple-choice"`

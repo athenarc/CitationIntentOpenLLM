@@ -44,7 +44,32 @@ echo "Port: $PORT"
 echo "Log Level: $LOG_LEVEL"
 echo "=========================================="
 
+# Pre-flight checks
+echo "Running pre-flight checks..."
+
+# Check if port is already in use
+if lsof -Pi :$PORT -sTCP:LISTEN -t >/dev/null 2>&1 ; then
+    echo "✗ Error: Port $PORT is already in use"
+    echo "  Current process using port $PORT:"
+    lsof -Pi :$PORT -sTCP:LISTEN
+    echo ""
+    echo "  To kill the existing process, run:"
+    echo "  kill \$(lsof -t -i:$PORT)"
+    exit 1
+fi
+
+# Check if Python can import the app module
+echo "Validating app module..."
+if ! python -c "from src.main import app; print('✓ Module import successful')" 2>"$LOG_DIR/import_error.log"; then
+    echo "✗ Error: Failed to import app module"
+    echo "  Details in: $LOG_DIR/import_error.log"
+    echo ""
+    cat "$LOG_DIR/import_error.log"
+    exit 1
+fi
+
 # Start the application
+echo "Starting Gunicorn..."
 gunicorn \
   --workers "$WORKERS" \
   --worker-class "$WORKER_CLASS" \
@@ -61,18 +86,57 @@ gunicorn \
   --pid "$LOG_DIR/gunicorn.pid" \
   "$APP_MODULE"
 
-if [ $? -eq 0 ]; then
-    echo "✓ Citation Intent API started successfully!"
-    echo ""
-    echo "PID file: $LOG_DIR/gunicorn.pid"
-    echo "Access log: $ACCESS_LOG"
-    echo "Error log: $ERROR_LOG"
-    echo ""
-    echo "API available at: http://$HOST:$PORT"
-    echo "API docs available at: http://$HOST:$PORT/docs"
-    echo ""
-    echo "To stop the server, run: kill \$(cat $LOG_DIR/gunicorn.pid)"
-else
+if [ $? -ne 0 ]; then
     echo "✗ Failed to start Citation Intent API"
+    echo "  Check error log for details: $ERROR_LOG"
+    if [ -f "$ERROR_LOG" ]; then
+        echo ""
+        echo "Last 20 lines of error log:"
+        tail -20 "$ERROR_LOG"
+    fi
+    exit 1
+fi
+
+# Wait a moment and verify the process is running
+sleep 2
+
+if [ -f "$LOG_DIR/gunicorn.pid" ]; then
+    PID=$(cat "$LOG_DIR/gunicorn.pid")
+    if ps -p $PID > /dev/null 2>&1; then
+        # Verify the API is responding
+        if curl -s -o /dev/null -w "%{http_code}" http://localhost:$PORT/health | grep -q "200"; then
+            echo "✓ Citation Intent API started successfully!"
+            echo ""
+            echo "PID: $PID (saved in $LOG_DIR/gunicorn.pid)"
+            echo "Access log: $ACCESS_LOG"
+            echo "Error log: $ERROR_LOG"
+            echo ""
+            echo "API available at: http://$HOST:$PORT"
+            echo "API docs available at: http://$HOST:$PORT/docs"
+            echo ""
+            echo "To stop the server, run: bash scripts/stop.sh"
+        else
+            echo "⚠ Warning: Server started but health check failed"
+            echo "  The API may still be initializing or there may be a configuration issue"
+            echo "  Check logs: tail -f $ERROR_LOG"
+        fi
+    else
+        echo "✗ Process started but died immediately"
+        echo "  Check error log: $ERROR_LOG"
+        if [ -f "$ERROR_LOG" ]; then
+            echo ""
+            echo "Last 20 lines of error log:"
+            tail -20 "$ERROR_LOG"
+        fi
+        exit 1
+    fi
+else
+    echo "✗ PID file not created - startup failed"
+    echo "  Check error log: $ERROR_LOG"
+    if [ -f "$ERROR_LOG" ]; then
+        echo ""
+        echo "Last 20 lines of error log:"
+        tail -20 "$ERROR_LOG"
+    fi
     exit 1
 fi
