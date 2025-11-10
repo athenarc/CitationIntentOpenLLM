@@ -15,3 +15,5 @@ __pycache__/
 api/.env
 api/logs
 api/**/__pycache__/
+
+.DS_Store
