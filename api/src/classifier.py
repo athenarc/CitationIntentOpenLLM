@@ -213,7 +213,7 @@ def clean_prediction(prediction, class_labels):
 class CitationIntentClassifier:
     """Main classifier class for citation intent classification."""
     
-    def __init__(self, config_path="config.json"):
+    def __init__(self, config_path=Path(__file__).parent.parent / 'config' / 'config.json'):
         """Initialize the classifier with configuration."""
         self.config = load_config(config_path)
         
